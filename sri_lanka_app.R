@@ -34,15 +34,16 @@ ui <- fluidPage(tags$head(tags$meta(name = "viewport", content = "width=device-w
                   ),
                   mainPanel(
                     tabsetPanel(
+                      selected = "About",
                       tabPanel("Map",
                                card(
                                  card_header("Where is Sri Lanka?"),
                                  card_body(
                                    leafletOutput("sriMap", height = 400),
-                                   p("Sri Lanka is an island country located in the Indian Ocean, just southeast of the Indian subcontinent. 
-                                      Its strategic location along major shipping routes has historically made it a vital maritime hub."),
-                                   p("The island lies close to India, particularly the Tamil Nadu coast — separated by the shallow Palk Strait and Gulf of Mannar. 
-                                      Other nearby landmasses include the Maldives to the southwest and Indonesia further southeast."),
+                                   p("Sri Lanka exists as a small island nation which forms a teardrop shape in the southeastern waters of India. The island exists between 5° and 10°N latitude and 79° to 82°E longitude in the Indian Ocean. The island measures approximately 65,000 square kilometers which is smaller than Ireland yet contains extensive ecological and cultural diversity."),
+                                   p("The island has operated as a maritime crossroads for East-West trade for many centuries. Its position near Indian Ocean sea lanes has provided it with both military and commercial significance. Moreover, the ports of Colombo and Hambantota have emerged as key locations in regional geopolitical and trade activities."),
+                                   p("Sri Lanka’s terrain is a mix of flat coastal plains and a rugged mountainous interior. The Central Highlands, which include Pidurutalagala (2,524 meters) among other peaks, determine the climate and agriculture of the island. These hills are famous for tea plantations which were introduced during the British colonial rule and are still the mainstay of the economy."),
+                                   p("Apart from this, the island stands as one of the world’s 36 biodiversity hotspots despite its small size. It hosts distinctive bird, reptile, amphibian and plant species which exist nowhere else in the world. The natural heritage of Yala and Sinharaja national parks demonstrates this rich biodiversity."),
                                    p("This geographic location has shaped Sri Lanka's historical trade, cultural exchanges, and vulnerability to global market fluctuations.")
                                  )
                                )
@@ -135,7 +136,7 @@ ui <- fluidPage(tags$head(tags$meta(name = "viewport", content = "width=device-w
                                        full_screen = TRUE,
                                        card_header("Wrapping It Up"),
                                        card_body(
-                                         p("Sri Lanka's economic challenges are not isolated incidents but a culmination of structural issues—chronic trade deficits, volatile inflation, and declining GDP. These stressors were magnified during the 2020–2022 crisis, exacerbating currency depreciation and reducing foreign reserves."),
+                                         p("Sri Lanka's economic challenges are not isolated incidents but a culmination of structural issues such as chronic trade deficits, volatile inflation, and declining GDP. These stressors were magnified during the 2020–2022 crisis, exacerbating currency depreciation and reducing foreign reserves."),
                                          p("This dashboard integrates visualizations, data summaries, and interactivity to present a holistic view of Sri Lanka's economic health over the last decade. 
                        By engaging with the data, users can appreciate how macroeconomic trends influence everyday life, and how policy missteps can trigger large-scale consequences.")
                                        )
@@ -195,7 +196,7 @@ ui <- fluidPage(tags$head(tags$meta(name = "viewport", content = "width=device-w
                       ),
                       
                       tabPanel("About",
-                               h3("About This Project"),
+                               h3("Sri Lanka Through an Economic Lens "),
                                p("This interactive dashboard explores Sri Lanka’s economic landscape from 2012 to 2023, focusing on inflation, GDP growth, and trade performance. Created for MA415 Island Exploration project at Boston University."),
                                
                                h4("\U0001F310 Objective"),
@@ -264,6 +265,7 @@ server <- function(input, output, session) {
     }
   )
   
+  # Inflation Line Plot 
   output$inflationPlot <- renderPlot({
     ggplot(inflation_data, aes(x = Year, y = Inflation_Rate)) +
       geom_line(color = "firebrick", linewidth = 1.2) +
@@ -278,7 +280,7 @@ server <- function(input, output, session) {
   
   
   
-  
+  # GDP Plot 
   output$gdpPlot <- renderPlot({
     ggplot(gdp_data, aes(x = Year, y = GDP)) +
       geom_col(fill = "steelblue") +
@@ -291,11 +293,11 @@ server <- function(input, output, session) {
   
   
   
-  
+  # Trade Plot 
   output$tradePlot <- renderPlot({
     ggplot(trade_data, aes(x = Year)) +
-      geom_line(aes(y = Exports, color = "Exports"), size = 1.2) +
-      geom_line(aes(y = Imports, color = "Imports"), size = 1.2) +
+      geom_line(aes(y = Exports, color = "Exports"), linewidth = 1.2) +
+      geom_line(aes(y = Imports, color = "Imports"), linewidth = 1.2) +
       geom_vline(xintercept = 2022, linetype = "dashed", color = "blue", linewidth = 1) +
       annotate("text", x = 2021.7, y = max(trade_data$Imports, na.rm = TRUE),
                label = "2022 Crisis", color = "blue", angle = 90, hjust = 1.1) +
@@ -306,7 +308,7 @@ server <- function(input, output, session) {
   
   
   
-  
+  # Interactive trade data 
   selectedYear <- reactive({ input$trade_year })
   output$tradeTable <- renderTable({ subset(trade_data, Year == selectedYear(), select = c("Year", "Imports", "Exports")) })
   output$balanceTable <- renderTable({ subset(trade_data, Year == selectedYear(), select = c("Year", "Trade_Balance")) })
